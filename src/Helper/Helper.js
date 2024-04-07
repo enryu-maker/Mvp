@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-export const baseURL = 'http://192.168.159.191:8000/'
-export const baseURL2 = 'http://192.168.159.191:8000'
+export const baseURL = 'https://apimvp.pythonanywhere.com/'
+export const baseURL2 = 'https://apimvp.pythonanywhere.com'
 
 
 let headers = {};
 const axiosIns = axios.create({
-    baseURL: 'http://192.168.159.191:8000/',
+    baseURL: 'https://apimvp.pythonanywhere.com/',
     headers,
 });
 axiosIns.interceptors.request.use(

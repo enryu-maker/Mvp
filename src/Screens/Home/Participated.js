@@ -3,6 +3,7 @@ import React from 'react'
 import { Images } from '../../Components/Images'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMyEvents } from '../../../Store/actions'
+import { baseURL2 } from '../../Helper/Helper'
 
 export default function Participated({
     navigation
@@ -10,6 +11,7 @@ export default function Participated({
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)
     const participated = useSelector(state => state.Reducers.participated)
+    console.log(participated)
     React.useEffect(() => {
         dispatch(getMyEvents(setLoading))
     }, [])
@@ -49,11 +51,17 @@ export default function Participated({
                                 parti : true
                             })
                         }}
-                        className='bg-primary shadow-2xl self-center w-[88%]  h-[100px] rounded-xl mt-10 justify-center items-center'
+                        className='bg-white shadow-2xl self-center w-[88%]  rounded-xl mt-10 justify-center items-center'
                     >
+                        <Image
+                            alt='event'
+                            className='h-[120px] w-[300px] object-contain'
+                            source={{ uri: baseURL2 + item?.event?.image }}
+                        />
+
                         <Text
-                            className=' text-2xl font-semibold text-white text-center tracking-widest'
-                        >{item?.title}</Text>
+                            className=' text-2xl mt-4 font-semibold text-black text-center tracking-widest'
+                        >{item?.event['title']}</Text>
                     </TouchableOpacity>
                 )}
             />

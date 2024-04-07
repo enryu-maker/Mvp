@@ -10,29 +10,43 @@ export default function UserType({
     >
       <StatusBar barStyle={'light-content'} />
       <Image
-      className='w-full h-[400px]'
-      source={Images.mvp}/>
+        className='w-full h-[400px]'
+        source={Images.mvp} />
+      <View
+        className='justify-center items-center w-full'
+      >
         <View
-          className='justify-center items-center w-full'
-        >
-          <View
-            className='bg-white justify-center items-center h-[180px] w-full rounded-tl-[32px] rounded-tr-[32px] '>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Login", {
-                  type: "Individual"
-                })
-              }}
-              className='bg-primary w-[88%] h-[50px] rounded-full justify-center items-center'
+          className='bg-white justify-evenly items-center h-[180px] w-full rounded-tl-[32px] rounded-tr-[32px] '>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login", {
+                type: false
+              })
+            }}
+            className='bg-primary w-[88%] h-[50px] rounded-full justify-center items-center'
+          >
+            <Text
+              className='text-center text-lg  tracking-wider font-regular text-white'
             >
-              <Text
-                className='text-center text-lg  tracking-wider font-regular text-white'
-              >
-                Get Started
-              </Text>
-            </TouchableOpacity>
-          </View>
+              Student Login
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login", {
+                type: true
+              })
+            }}
+            className='bg-primary w-[88%] h-[50px] rounded-full justify-center items-center'
+          >
+            <Text
+              className='text-center text-lg  tracking-wider font-regular text-white'
+            >
+              Teacher Login
+            </Text>
+          </TouchableOpacity>
         </View>
+      </View>
     </View>
   )
 }

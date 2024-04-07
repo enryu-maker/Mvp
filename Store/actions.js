@@ -5,27 +5,35 @@ import axiosIns, { baseURL } from "../src/Helper/Helper";
 export const Init = (setloading) => {
     setloading(true)
     return async dispatch => {
-    const access = await AsyncStorage.getItem("access")
-    console.log(access)
+        const access = await AsyncStorage.getItem("access")
+        const is_teacher = JSON.parse(await AsyncStorage.getItem("is_teacher"))
+        console.log(access)
 
         dispatch({
             type: 'LOGIN',
-            payload: access,
+            payload: {
+                access: access,
+                is_teacher: is_teacher,
+            }
         })
         setloading(false)
     }
 }
-export const LoginAction = (data, setLoading) => {
+export const LoginAction = (data, setLoading, type) => {
     console.log(data)
     setLoading(true)
     return async dispatch => {
-        await axios.post(baseURL + "login/", data).then(async (res) => {
+        await axios.post(baseURL + 'auth/login/', data).then(async (res) => {
             console.log(res.data)
-            await AsyncStorage.setItem("access",res.data.access)
+            await AsyncStorage.setItem("access", res.data.token["access"])
+            await AsyncStorage.setItem("is_teacher", JSON.stringify(res.data.is_teacher));
             if (res.status == 200) {
                 dispatch({
-                    type:"LOGIN",
-                    payload:res.data.access
+                    type: "LOGIN",
+                    payload: {
+                        access: res?.data?.token["access"],
+                        is_teacher: res.data.is_teacher,
+                    }
                 })
             }
             else {
@@ -40,42 +48,46 @@ export const LoginAction = (data, setLoading) => {
     }
 }
 
-export const RegisterAction = (data, setLoading,navigation) => {
+export const RegisterAction = (data, setLoading, navigation, type) => {
     console.log(data)
     setLoading(true)
     return async dispatch => {
-        await axios.post(baseURL + "signup/", data).then((res) => {
-            console.log(res.data)
+        await axios.post(baseURL + `auth/${type ? "teacher-register/" : "student-register/"}`, data).then((res) => {
             if (res.status == 201) {
-                navigation.navigate('Verify',{
-                    email:data.email
+                navigation.navigate('Verify', {
+                    email: data.email,
+                    type: type
                 })
                 setLoading(false)
             }
             else {
                 setLoading(false)
-                Alert.alert("hi")
+                Alert.alert("Something Went Worng")
             }
             setLoading(false)
         }).catch((err) => {
-            console.log(err)
+            console.log(err.response.data)
             // Alert.alert("Something Went Wrong")
             setLoading(false)
         })
     }
 }
-export const VerifyAction = (data, setLoading,navigation) => {
+export const VerifyAction = (data, setLoading, navigation, type) => {
     console.log(data)
     setLoading(true)
     return async dispatch => {
-        await axios.post(baseURL + "verify/", data).then((res) => {
+        await axios.post(baseURL + "auth/verify/", data).then((res) => {
             console.log(res.status)
             if (res.status == 200) {
                 Alert.alert('Verified', 'Account Verified Successfully', [
-                    {text: 'Go to Login', onPress: () => {
-                        navigation.replace("Login")
-                    }},
-                  ]);
+                    {
+                        text: 'Go to Login', onPress: () => {
+                            navigation.replace("Login", {
+                                type: type
+                            })
+                        }
+                    },
+                ]);
                 setLoading(false)
             }
             else {
@@ -90,15 +102,16 @@ export const VerifyAction = (data, setLoading,navigation) => {
     }
 }
 
-export const getMyEvents = (setLoading)=>{
+
+export const getMyEvents = (setLoading) => {
     setLoading(true)
     return async dispatch => {
-        await axiosIns.get(baseURL + "myevent/").then((res) => {
+        await axiosIns.get(baseURL + "participants/my-events/").then((res) => {
             console.log(res.data)
             if (res.status == 200) {
                 dispatch({
-                    type:"PARTI",
-                    payload:res.data
+                    type: "PARTI",
+                    payload: res.data
                 })
             }
             else {
@@ -114,14 +127,15 @@ export const getMyEvents = (setLoading)=>{
     }
 }
 
-export const getEvents = (setLoading)=>{
+export const getMyTEvents = (setLoading) => {
     setLoading(true)
     return async dispatch => {
-        await axios.get(baseURL + "event/").then((res) => {
+        await axiosIns.get(baseURL + "event/created-events/").then((res) => {
+            console.log(res.data)
             if (res.status == 200) {
                 dispatch({
-                    type:"EVENTS",
-                    payload:res.data
+                    type: "EVENTT",
+                    payload: res.data
                 })
             }
             else {
@@ -137,12 +151,16 @@ export const getEvents = (setLoading)=>{
     }
 }
 
-export const addParticipate = (id,setLoading)=>{
+export const getSubEvents = (setLoading, eventId) => {
     setLoading(true)
     return async dispatch => {
-        await axiosIns.post(`participate/${id}/`).then((res) => {
+        await axiosIns.get(baseURL + `event/main-event/${eventId}/sub-events/`).then((res) => {
+            console.log(res.data)
             if (res.status == 200) {
-                Alert.alert(res?.data?.message)
+                dispatch({
+                    type: "SUB",
+                    payload: res.data
+                })
             }
             else {
                 setLoading(false)
@@ -151,18 +169,22 @@ export const addParticipate = (id,setLoading)=>{
             setLoading(false)
         }).catch((err) => {
             console.log(err)
-            Alert.alert(err?.response?.data?.message)
+            Alert.alert(err?.response?.data?.error)
             setLoading(false)
         })
     }
 }
 
-export const removeParticipate = (id,setLoading)=>{
+
+export const getEvents = (setLoading) => {
     setLoading(true)
     return async dispatch => {
-        await axiosIns.post(`withdraw/${id}/`).then((res) => {
+        await axiosIns.get(baseURL + "event/main-events/").then((res) => {
             if (res.status == 200) {
-                Alert.alert(res?.data?.message)
+                dispatch({
+                    type: "EVENTS",
+                    payload: res.data
+                })
             }
             else {
                 setLoading(false)
@@ -171,13 +193,107 @@ export const removeParticipate = (id,setLoading)=>{
             setLoading(false)
         }).catch((err) => {
             console.log(err)
-            Alert.alert(err?.response?.data?.message)
+            Alert.alert(err?.response?.data?.error)
             setLoading(false)
         })
     }
 }
 
-export const getRanks = (setLoading,setData)=>{
+export const getClgs = (setLoading) => {
+    setLoading(true)
+    return async dispatch => {
+        await axios.get(baseURL + "event/college/").then((res) => {
+            if (res.status == 200) {
+                dispatch({
+                    type: "CLG",
+                    payload: res.data
+                })
+            }
+            else {
+                setLoading(false)
+                Alert.alert("something went wrong")
+            }
+            setLoading(false)
+        }).catch((err) => {
+            console.log(err)
+            Alert.alert(err?.response?.data?.error)
+            setLoading(false)
+        })
+    }
+}
+
+export const addParticipate = (id, setLoading) => {
+    console.log(id)
+    setLoading(true)
+    return async dispatch => {
+        await axiosIns.post(`participants/participate/`, {
+            "event_id": id
+        }).then((res) => {
+            if (res.status == 201) {
+                Alert.alert(res?.data?.msg)
+            }
+            else {
+                setLoading(false)
+                Alert.alert("something went wrong")
+            }
+            setLoading(false)
+        }).catch((err) => {
+            console.log(err)
+            Alert.alert(err?.response?.data?.msg)
+            setLoading(false)
+        })
+    }
+}
+
+export const addEvents = (data, setLoading) => {
+    setLoading(true)
+    const formdata = new FormData();
+    for (const [key, value] of Object.entries(data)) {
+        formdata.append(key, value);
+    }
+    return async dispatch => {
+        await axiosIns.post(`event/main-event/1/create-subevent/`, formdata, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        }).then((res) => {
+            if (res.status == 201) {
+                Alert.alert(res?.data?.msg)
+            }
+            else {
+                setLoading(false)
+                Alert.alert("something went wrong")
+            }
+            setLoading(false)
+        }).catch((err) => {
+            console.log(err)
+            Alert.alert(err?.response?.data?.msg)
+            setLoading(false)
+        })
+    }
+}
+
+export const removeParticipate = (id, setLoading) => {
+    setLoading(true)
+    return async dispatch => {
+        await axiosIns.post(`participants/withdraw/${id}/`).then((res) => {
+            if (res.status == 200) {
+                Alert.alert(res?.data?.msg)
+            }
+            else {
+                setLoading(false)
+                Alert.alert("something went wrong")
+            }
+            setLoading(false)
+        }).catch((err) => {
+            console.log(err)
+            Alert.alert(err?.response?.data?.msg)
+            setLoading(false)
+        })
+    }
+}
+
+export const getRanks = (setLoading, setData) => {
     setLoading(true)
     return async dispatch => {
         await axios.get(`ranks/`).then((res) => {
@@ -192,7 +308,7 @@ export const getRanks = (setLoading,setData)=>{
             setLoading(false)
         }).catch((err) => {
             console.log(err)
-            Alert.alert(err?.response?.data?.message)
+            Alert.alert(err?.response?.data?.msg)
             setLoading(false)
         })
     }
@@ -204,8 +320,7 @@ export const LogoutAction = () => {
     return async dispatch => {
         await AsyncStorage.clear()
         dispatch({
-            type: 'LOGIN',
-            payload: null ,
+            type: 'LOGOUT',
         })
     }
 }

@@ -1,23 +1,21 @@
-import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import React from 'react'
-import { Images } from '../../Components/Images'
 import { useDispatch, useSelector } from 'react-redux'
-import { getSubEvents } from '../../../Store/actions'
-import { baseURL, baseURL2 } from '../../Helper/Helper'
-
-export default function Ongoing({
+import { getMyTEvents } from '../../../Store/actions'
+import { Images } from '../../Components/Images'
+import {View, Text, Image, TouchableOpacity,FlatList } from 'react-native'
+import { baseURL2 } from '../../Helper/Helper'
+export default function MyEvents({
     navigation
 }) {
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)
-    const sub = useSelector(state => state.Reducers.sub)
+    const eventteacher = useSelector(state=>state.Reducers.eventteacher)
     React.useEffect(() => {
-        dispatch(getSubEvents(setLoading, 1))
+        dispatch(getMyTEvents(setLoading))
     }, [])
-
     return (
         <View
-            className='flex justify-center h-full w-full bg-white'
+            className='flex-1  w-full bg-white'
         >
             <View
                 className='flex flex-row justify-between items-center mt-5'>
@@ -34,14 +32,14 @@ export default function Ongoing({
                 </TouchableOpacity>
                 <Text
                     className=' text-lg font-semibold tracking-wider'
-                >Ongoing</Text>
+                >My Events</Text>
                 <Text
                     className=' w-[30px] text-base font-semibold'
                 ></Text>
             </View>
             <FlatList
                 className='w-full  self-center pb-20'
-                data={sub}
+                data={eventteacher}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity
                         onPress={() => {

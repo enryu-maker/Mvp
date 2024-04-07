@@ -2,7 +2,8 @@ import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import React from 'react'
 import { Images } from '../../Components/Images'
 import { useDispatch, useSelector } from 'react-redux'
-import { getEvents, getRanks } from '../../../Store/actions'
+import { getSubEvents } from '../../../Store/actions'
+import { baseURL2 } from '../../Helper/Helper'
 
 export default function Results({
     navigation
@@ -10,9 +11,9 @@ export default function Results({
     const [loading, setLoading] = React.useState(false)
     const [data, setData] = React.useState([])
     const dispatch = useDispatch()
+    const sub = useSelector(state => state.Reducers.sub)
     React.useEffect(() => {
-        dispatch(getRanks(setLoading, setData))
-        console.log(data)
+        dispatch(getSubEvents(setLoading, 1))
     }, [])
     return (
         <View
@@ -38,22 +39,31 @@ export default function Results({
                     className=' w-[30px] text-base font-semibold'
                 ></Text>
             </View>
-            <TouchableOpacity
-                className='bg-primary shadow-2xl self-center w-[88%]  h-[100px] rounded-xl mt-10 justify-center items-center'
-            >
-                <Text
-                    className=' text-2xl font-semibold text-white text-center tracking-widest'
-                >Soccer Game</Text>
-            </TouchableOpacity>
-            <Text
-                className=' text-2xl font-semibold text-black text-center tracking-widest'
-            >Rank1 : Sample1</Text>
-            <Text
-                className=' text-2xl font-semibold text-black text-center tracking-widest'
-            >Rank2 : Sample1</Text>
-            <Text
-                className=' text-2xl font-semibold text-black text-center tracking-widest'
-            >Rank3 : Sample1</Text>
+            <FlatList
+                className='w-full  self-center pb-20'
+                data={sub}
+                renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate("ResultInfo", {
+                                item: item?.participants,
+                            })
+                        }}
+                        className='bg-white px-5 py-2 shadow-2xl self-center  rounded-xl mb-10 justify-center items-center'
+                    >
+
+                        <Image
+                            alt='event'
+                            className='h-[120px] w-[300px] object-contain'
+                            source={{ uri: baseURL2 + item?.image }}
+                        />
+
+                        <Text
+                            className=' text-2xl mt-4 font-semibold text-black text-center tracking-widest'
+                        >{item?.title}</Text>
+                    </TouchableOpacity>
+                )}
+            />
         </View>
     )
 }

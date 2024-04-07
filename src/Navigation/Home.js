@@ -6,6 +6,9 @@ import Participated from '../Screens/Home/Participated';
 import MainEventInfo from '../Screens/Home/MainEventInfo';
 import EventInfo from '../Screens/Home/EventInfo';
 import Results from '../Screens/Home/Results';
+import AddEvents from '../Screens/Home/AddEvents';
+import MyEvents from '../Screens/Home/MyEvents';
+import ResultInfo from '../Screens/Home/ResultInfo';
 const Stack = createNativeStackNavigator()
 export default function HomeNav() {
     return (
@@ -25,6 +28,10 @@ export default function HomeNav() {
             <Stack.Screen name="MainInfo" component={MainEventInfo} />
             <Stack.Screen name="Info" component={EventInfo} />
             <Stack.Screen name="Results" component={Results} />
+            <Stack.Screen name="AddEvents" component={AddEvents} />
+            <Stack.Screen name="MyEvents" component={MyEvents} />
+            <Stack.Screen name="ResultInfo" component={ResultInfo} />
+
         </Stack.Navigator>
     )
 }

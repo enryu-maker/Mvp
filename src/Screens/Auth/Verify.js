@@ -8,6 +8,7 @@ export default function Verify({
   navigation,
   route
 }) {
+
   const [code,setCode] = React.useState("")
   const dispatch = useDispatch()
   const [loading, setLoading] = React.useState(false)
@@ -52,7 +53,7 @@ export default function Verify({
             dispatch(VerifyAction({
               "email":route?.params?.email,
               "otp":parseInt(code)
-            },setLoading,navigation))
+            },setLoading,navigation,route?.params?.type))
           }}
           className='bg-primary w-[88%] h-[50px] rounded-full justify-center items-center'
         >

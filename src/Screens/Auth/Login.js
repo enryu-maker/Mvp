@@ -4,12 +4,14 @@ import { Images } from '../../Components/Images'
 import { useDispatch } from 'react-redux'
 import { LoginAction } from '../../../Store/actions'
 export default function Login({
-    navigation
+    navigation,
+    route
 }) {
     const [data, setData] = React.useState({
         email: "",
         password: ""
     })
+    const type = route.params.type
     const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch()
     return (
@@ -21,7 +23,7 @@ export default function Login({
                 >Sign In</Text>
                 <Text
                     className=' text-lg font-regular text-gray-500 text-center tracking-widest'
-                >Sign in to your account</Text>
+                >{type?"Sign in to Teacher account":"Sign in to Student account"}</Text>
 
             </View>
             <View className='w-[100%] items-center justify-center space-y-5'>
@@ -74,7 +76,7 @@ export default function Login({
                 </View>
                 <TouchableOpacity
                     onPress={() => {
-                        dispatch(LoginAction(data,setLoading))
+                        dispatch(LoginAction(data,setLoading,type))
                     }}
                     className='bg-primary w-[88%] h-[50px] rounded-full justify-center items-center'
                 >
@@ -87,7 +89,7 @@ export default function Login({
                             <Text
                                 className='text-center text-lg self-center flex justify-center items-center  tracking-wider font-regular text-white'
                             >
-                                Login
+                               { type? "Login as Teacher" : "Login as Student" }
                             </Text>
                     }
                 </TouchableOpacity>
@@ -97,7 +99,9 @@ export default function Login({
             >
                 Don’t have an account? <Text
                     onPress={() => {
-                        navigation.navigate("Register")
+                        navigation.navigate("Register",{
+                            type:type
+                        })
                     }}
                     className='text-primary'
                 >

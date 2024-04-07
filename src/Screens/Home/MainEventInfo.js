@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import React from 'react'
 import { Images } from '../../Components/Images'
 import { useDispatch, useSelector } from 'react-redux'
-import { getMyEvents } from '../../../Store/actions'
+import { getSubEvents } from '../../../Store/actions'
 import { baseURL2 } from '../../Helper/Helper'
 
 export default function MainEventInfo({
@@ -11,8 +11,10 @@ export default function MainEventInfo({
 }) {
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)
+    const sub = useSelector(state => state.Reducers.sub)
+    
     React.useEffect(() => {
-        dispatch(getMyEvents(setLoading))
+        dispatch(getSubEvents(setLoading, route?.params?.item?.id))
     }, [])
     return (
         <View
@@ -52,14 +54,14 @@ export default function MainEventInfo({
 
             <FlatList
                 className='w-[88%]  self-center pb-50 '
-                data={route.params.item?.sub_events}
+                data={sub}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity
                         onPress={() => {
                             navigation.navigate("Info", {
                                 item: item,
-                                show:true,
-                                parti : false
+                                show: true,
+                                parti: false
                             })
                         }}
                         className='bg-primary shadow-2xl w-[88%] self-center  h-[100px] rounded-xl mt-10 justify-center items-center'

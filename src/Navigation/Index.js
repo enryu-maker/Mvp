@@ -8,7 +8,6 @@ import { Init } from '../../Store/actions';
 
 export default function Index() {
     const access = useSelector(state=>state.Reducers.access)
-    console.log("in",access)
     const dispatch = useDispatch()
     const [loading,setLoading] = React.useState(false)
     React.useEffect(()=>{

@@ -7,7 +7,6 @@ export const Init = (setloading) => {
     return async dispatch => {
         const access = await AsyncStorage.getItem("access")
         const is_teacher = JSON.parse(await AsyncStorage.getItem("is_teacher"))
-        console.log(access)
 
         dispatch({
             type: 'LOGIN',
@@ -20,11 +19,9 @@ export const Init = (setloading) => {
     }
 }
 export const LoginAction = (data, setLoading, type) => {
-    console.log(data)
     setLoading(true)
     return async dispatch => {
         await axios.post(baseURL + 'auth/login/', data).then(async (res) => {
-            console.log(res.data)
             await AsyncStorage.setItem("access", res.data.token["access"])
             await AsyncStorage.setItem("is_teacher", JSON.stringify(res.data.is_teacher));
             if (res.status == 200) {
@@ -49,7 +46,6 @@ export const LoginAction = (data, setLoading, type) => {
 }
 
 export const RegisterAction = (data, setLoading, navigation, type) => {
-    console.log(data)
     setLoading(true)
     return async dispatch => {
         await axios.post(baseURL + `auth/${type ? "teacher-register/" : "student-register/"}`, data).then((res) => {
@@ -66,18 +62,15 @@ export const RegisterAction = (data, setLoading, navigation, type) => {
             }
             setLoading(false)
         }).catch((err) => {
-            console.log(err.response.data)
-            // Alert.alert("Something Went Wrong")
+            Alert.alert("Something Went Wrong")
             setLoading(false)
         })
     }
 }
 export const VerifyAction = (data, setLoading, navigation, type) => {
-    console.log(data)
     setLoading(true)
     return async dispatch => {
         await axios.post(baseURL + "auth/verify/", data).then((res) => {
-            console.log(res.status)
             if (res.status == 200) {
                 Alert.alert('Verified', 'Account Verified Successfully', [
                     {
@@ -107,7 +100,6 @@ export const getMyEvents = (setLoading) => {
     setLoading(true)
     return async dispatch => {
         await axiosIns.get(baseURL + "participants/my-events/").then((res) => {
-            console.log(res.data)
             if (res.status == 200) {
                 dispatch({
                     type: "PARTI",
@@ -131,7 +123,7 @@ export const getMyTEvents = (setLoading) => {
     setLoading(true)
     return async dispatch => {
         await axiosIns.get(baseURL + "event/created-events/").then((res) => {
-            console.log(res.data)
+            (res.data)
             if (res.status == 200) {
                 dispatch({
                     type: "EVENTT",
@@ -155,7 +147,6 @@ export const getSubEvents = (setLoading, eventId) => {
     setLoading(true)
     return async dispatch => {
         await axiosIns.get(baseURL + `event/main-event/${eventId}/sub-events/`).then((res) => {
-            console.log(res.data)
             if (res.status == 200) {
                 dispatch({
                     type: "SUB",
@@ -297,7 +288,6 @@ export const getRanks = (setLoading, setData) => {
     setLoading(true)
     return async dispatch => {
         await axios.get(`ranks/`).then((res) => {
-            console.log(res.data)
             if (res.status == 200) {
                 setData(res.data)
             }

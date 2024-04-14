@@ -10,6 +10,7 @@ export default function MyEvents({
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)
     const eventteacher = useSelector(state=>state.Reducers.eventteacher)
+    console.log(eventteacher)
     React.useEffect(() => {
         dispatch(getMyTEvents(setLoading))
     }, [])

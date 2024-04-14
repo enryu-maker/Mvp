@@ -38,7 +38,7 @@ export const LoginAction = (data, setLoading, type) => {
                 Alert.alert("Invalid User Name or Password")
             }
         }).catch((err) => {
-            console.log(err)
+            console.log(err.response.data.msg)
             Alert.alert("Invalid User Name or Password")
             setLoading(false)
         })

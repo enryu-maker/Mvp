@@ -13,6 +13,7 @@ export default function EventInfo({
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)
     const is_teacher = useSelector(state => state.Reducers.is_teacher)
+    console.log(route?.params?.item?.participants)
     return (
         <View
             className='flex-1 justify-center w-full bg-white'
@@ -33,7 +34,7 @@ export default function EventInfo({
 
                 <Text
                     className=' text-lg font-semibold tracking-wider'
-                >{route?.params?.parti ?route.params.item?.event.title : route?.params?.item?.title}</Text>
+                >{route?.params?.parti ? route.params.item?.event.title : route?.params?.item?.title}</Text>
                 <Text
                     className=' w-[30px] text-base font-semibold'
                 ></Text>
@@ -43,17 +44,17 @@ export default function EventInfo({
             >
                 <Image
                     className='h-[300px] w-[300px] object-contain mt-10 self-center'
-                    source={route?.params?.parti ? { uri: baseURL2 + route.params.item?.event.image} : { uri: baseURL2 +  route.params.item?.image }}
+                    source={route?.params?.parti ? { uri: baseURL2 + route.params.item?.event.image } : { uri: baseURL2 + route.params.item?.image }}
                 />
                 <Text
                     className=' text-xl w-[88%] text-left mt-5 font-semibold tracking-wider self-center'
-                >{route?.params?.parti ?route.params.item?.event.title :  route.params.item?.title}</Text>
+                >{route?.params?.parti ? route.params.item?.event.title : route.params.item?.title}</Text>
                 <Text
                     className=' text-sm w-[88%] mt-5 font-semibold tracking-wider self-center'
-                >{route?.params?.parti ?route.params.item?.event.description :  route.params.item?.description}</Text>
+                >{route?.params?.parti ? route.params.item?.event.description : route.params.item?.description}</Text>
                 <Text
                     className=' text-sm w-[88%] mt-5 font-semibold tracking-wider self-center'
-                >Rules: {route?.params?.parti ?route.params.item?.event.rules :  route.params.item?.rules}</Text>
+                >Rules: {route?.params?.parti ? route.params.item?.event.rules : route.params.item?.rules}</Text>
                 {
                     !is_teacher ?
                         <>
@@ -105,7 +106,14 @@ export default function EventInfo({
                             }
                         </>
                         :
-                        null
+                        <>
+                            <Text className='w-[88%] self-center text-xl mt-5'>Participated Student</Text>
+                            <ScrollView className='w-[88%] self-center'>
+                                {route?.params?.item?.participants.map((item, index) => (
+                                    <Text className='text-black text-lg'>{index + 1}.{item?.user?.name}</Text>
+                                ))}
+                            </ScrollView>
+                        </>
                 }
             </ScrollView>
         </View>

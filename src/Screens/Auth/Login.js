@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, Image, SafeAreaView } from 'react-native'
+import { View, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, Image, SafeAreaView, Linking } from 'react-native'
 import React from 'react'
 import { Images } from '../../Components/Images'
 import { useDispatch } from 'react-redux'
@@ -67,7 +67,7 @@ export default function Login({
                 >
                     <Text
                         onPress={() => {
-                            navigation.navigate("Forget")
+                           Linking.openURL('https://apimvp.pythonanywhere.com/auth/forget-password/')
                         }}
                         className=' text-sm font-semibold text-primary tracking-wide'
                     >
